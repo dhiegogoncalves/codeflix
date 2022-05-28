@@ -1,10 +1,7 @@
 package com.codeflix.catalog.admin.application;
 
-import com.codeflix.catalog.admin.domain.Category;
+import com.codeflix.catalog.admin.domain.category.Category;
 
 public class UserCase {
 
-    public Category execute(){
-        return new Category();
-    }
 }
