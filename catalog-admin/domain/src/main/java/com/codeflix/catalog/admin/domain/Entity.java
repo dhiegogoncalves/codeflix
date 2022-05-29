@@ -2,6 +2,8 @@ package com.codeflix.catalog.admin.domain;
 
 import java.util.Objects;
 
+import com.codeflix.catalog.admin.domain.validation.ValidationHandler;
+
 public abstract class Entity<ID extends Identifier> {
 
     protected final ID id;
@@ -10,6 +12,8 @@ public abstract class Entity<ID extends Identifier> {
         Objects.requireNonNull(id, "'id' should not be null");
         this.id = id;
     }
+
+    public abstract void validate(ValidationHandler validationHandler);
 
     public ID getId() {
         return id;
