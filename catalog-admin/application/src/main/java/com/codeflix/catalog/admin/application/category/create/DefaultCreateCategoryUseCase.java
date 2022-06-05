@@ -4,7 +4,10 @@ import java.util.Objects;
 
 import com.codeflix.catalog.admin.domain.category.Category;
 import com.codeflix.catalog.admin.domain.category.CategoryGateway;
-import com.codeflix.catalog.admin.domain.validation.handler.ThrowsValidationHandler;
+import com.codeflix.catalog.admin.domain.validation.handler.Notification;
+
+import io.vavr.API;
+import io.vavr.control.Either;
 
 public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
 
@@ -15,12 +18,19 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
     }
 
     @Override
-    public CreateCategoryOutput execute(final CreateCategoryCommand aCommand) {
+    public Either<Notification, CreateCategoryOutput> execute(final CreateCategoryCommand aCommand) {
         final var aCategory = Category.newCategory(
                 aCommand.name(), aCommand.description(), aCommand.isActive());
 
-        aCategory.validate(new ThrowsValidationHandler());
+        final var notification = Notification.create();
+        aCategory.validate(notification);
 
-        return CreateCategoryOutput.from(this.categoryGateway.create(aCategory));
+        return notification.hasError() ? Either.left(notification) : create(aCategory);
+    }
+
+    private Either<Notification, CreateCategoryOutput> create(Category aCategory) {
+        return API.Try(() -> this.categoryGateway.create(aCategory))
+                .toEither()
+                .bimap(Notification::create, CreateCategoryOutput::from);
     }
 }
