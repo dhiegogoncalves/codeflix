@@ -38,6 +38,13 @@ public class Category extends AggregateRoot<CategoryID> {
         return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
     }
 
+    public static Category with(Category aCategory) {
+        return new Category(
+                aCategory.getId(), aCategory.getName(), aCategory.getDescription(),
+                aCategory.isActive(), aCategory.getCreatedAt(), aCategory.getUpdatedAt(),
+                aCategory.getDeletedAt());
+    }
+
     @Override
     public void validate(final ValidationHandler handler) {
         new CategoryValidator(this, handler).validate();

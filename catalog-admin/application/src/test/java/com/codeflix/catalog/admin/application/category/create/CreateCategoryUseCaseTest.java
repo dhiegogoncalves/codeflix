@@ -1,16 +1,19 @@
 package com.codeflix.catalog.admin.application.category.create;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Objects;
 
 import com.codeflix.catalog.admin.domain.category.CategoryGateway;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +30,11 @@ class CreateCategoryUseCaseTest {
     @Mock
     CategoryGateway categoryGateway;
 
+    @BeforeEach
+    void cleanUp() {
+        Mockito.reset(categoryGateway);
+    }
+
     @Test
     void givenAValidCommand_whenCallsCreateCategory_thenShouldReturnCategoryId() {
         final var expectedName = "Filmes";
@@ -40,10 +48,10 @@ class CreateCategoryUseCaseTest {
 
         final var actualOutput = defaultCreateCategoryUseCase.execute(aCommand).get();
 
-        Assertions.assertNotNull(actualOutput);
-        Assertions.assertNotNull(actualOutput.id());
+        assertNotNull(actualOutput);
+        assertNotNull(actualOutput.id());
 
-        Mockito.verify(categoryGateway, times(1)).create(argThat(
+        verify(categoryGateway, times(1)).create(argThat(
                 aCategory -> Objects.equals(expectedName, aCategory.getName())
                         && Objects.equals(expectedDescription, aCategory.getDescription())
                         && Objects.equals(expectedIsActive, aCategory.isActive())
@@ -66,10 +74,10 @@ class CreateCategoryUseCaseTest {
 
         final var notification = defaultCreateCategoryUseCase.execute(aCommand).getLeft();
 
-        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
 
-        Mockito.verify(categoryGateway, times(0)).create(any());
+        verify(categoryGateway, times(0)).create(any());
     }
 
     @Test
@@ -85,10 +93,10 @@ class CreateCategoryUseCaseTest {
 
         final var actualOutput = defaultCreateCategoryUseCase.execute(aCommand).get();
 
-        Assertions.assertNotNull(actualOutput);
-        Assertions.assertNotNull(actualOutput.id());
+        assertNotNull(actualOutput);
+        assertNotNull(actualOutput.id());
 
-        Mockito.verify(categoryGateway, times(1)).create(argThat(
+        verify(categoryGateway, times(1)).create(argThat(
                 aCategory -> Objects.equals(expectedName, aCategory.getName())
                         && Objects.equals(expectedDescription, aCategory.getDescription())
                         && Objects.equals(expectedIsActive, aCategory.isActive())
@@ -113,10 +121,10 @@ class CreateCategoryUseCaseTest {
 
         final var notification = defaultCreateCategoryUseCase.execute(aCommand).getLeft();
 
-        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
 
-        Mockito.verify(categoryGateway, times(1)).create(argThat(
+        verify(categoryGateway, times(1)).create(argThat(
                 aCategory -> Objects.equals(expectedName, aCategory.getName())
                         && Objects.equals(expectedDescription, aCategory.getDescription())
                         && Objects.equals(expectedIsActive, aCategory.isActive())
