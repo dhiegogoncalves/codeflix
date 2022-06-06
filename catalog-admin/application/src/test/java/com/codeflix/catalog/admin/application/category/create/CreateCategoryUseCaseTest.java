@@ -117,7 +117,8 @@ class CreateCategoryUseCaseTest {
         final var aCommand = CreateCategoryCommand.with(
                 expectedName, expectedDescription, expectedIsActive);
 
-        when(categoryGateway.create(any())).thenThrow(new IllegalStateException("Gateway error"));
+        when(categoryGateway.create(any()))
+                .thenThrow(new IllegalStateException(expectedErrorMessage));
 
         final var notification = defaultCreateCategoryUseCase.execute(aCommand).getLeft();
 

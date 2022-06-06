@@ -77,7 +77,7 @@ public class GetCategoryByIdUseCaseTest {
         final var expectedErrorMessage = "Gateway error";
 
         when(categoryGateway.findById(expectedId))
-                .thenThrow(new IllegalStateException("Gateway error"));
+                .thenThrow(new IllegalStateException(expectedErrorMessage));
 
         final var actualException = assertThrows(
                 IllegalStateException.class,
