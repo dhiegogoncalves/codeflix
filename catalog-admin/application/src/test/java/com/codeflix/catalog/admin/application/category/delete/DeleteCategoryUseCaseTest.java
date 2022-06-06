@@ -36,7 +36,7 @@ public class DeleteCategoryUseCaseTest {
     @Test
     void givenAValidId_whenCallsDeleteCategory_thenShouldBeOK() {
         final var aCategory = Category.newCategory(
-                "Film", null, true);
+                "Film", "A categoria mais assistida", true);
         final var expectedId = aCategory.getId();
 
         doNothing().when(categoryGateway).deleteById(expectedId);
@@ -60,7 +60,7 @@ public class DeleteCategoryUseCaseTest {
     @Test
     void givenAValidId_whenGatewayThrowsException_thenShouldReturnException() {
         final var aCategory = Category.newCategory(
-                "Film", null, true);
+                "Film", "A categoria mais assistida", true);
         final var expectedId = aCategory.getId();
 
         doThrow(new IllegalStateException("Gateway error"))
