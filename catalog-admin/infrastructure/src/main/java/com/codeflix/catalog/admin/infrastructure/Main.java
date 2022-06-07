@@ -1,9 +1,13 @@
 package com.codeflix.catalog.admin.infrastructure;
 
-import com.codeflix.catalog.admin.application.UserCase;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.codeflix.catalog.admin.infrastructure.configuration.WebServerConfig;
+
+@SpringBootApplication
 public class Main {
     public static void main(String[] args) {
-        // System.out.println(new UserCase().execute());
+        SpringApplication.run(WebServerConfig.class, args);
     }
 }
