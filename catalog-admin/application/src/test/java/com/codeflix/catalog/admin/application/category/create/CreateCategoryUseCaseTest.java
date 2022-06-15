@@ -2,20 +2,21 @@ package com.codeflix.catalog.admin.application.category.create;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Objects;
-
+import com.codeflix.catalog.admin.domain.category.Category;
 import com.codeflix.catalog.admin.domain.category.CategoryGateway;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,6 +30,9 @@ class CreateCategoryUseCaseTest {
 
     @Mock
     CategoryGateway categoryGateway;
+
+    @Captor
+    ArgumentCaptor<Category> categoryCaptor;
 
     @BeforeEach
     void cleanUp() {
@@ -51,14 +55,18 @@ class CreateCategoryUseCaseTest {
         assertNotNull(actualOutput);
         assertNotNull(actualOutput.id());
 
-        verify(categoryGateway, times(1)).create(argThat(
-                aCategory -> Objects.equals(expectedName, aCategory.getName())
-                        && Objects.equals(expectedDescription, aCategory.getDescription())
-                        && Objects.equals(expectedIsActive, aCategory.isActive())
-                        && Objects.nonNull(aCategory.getId())
-                        && Objects.nonNull(aCategory.getCreatedAt())
-                        && Objects.nonNull(aCategory.getUpdatedAt())
-                        && Objects.isNull(aCategory.getDeletedAt())));
+        verify(categoryGateway, times(1))
+                .create(categoryCaptor.capture());
+
+        final var aCategory = categoryCaptor.getValue();
+
+        assertEquals(expectedName, aCategory.getName());
+        assertEquals(expectedDescription, aCategory.getDescription());
+        assertEquals(expectedIsActive, aCategory.isActive());
+        assertNotNull(aCategory.getId());
+        assertNotNull(aCategory.getCreatedAt());
+        assertNotNull(aCategory.getUpdatedAt());
+        assertNull(aCategory.getDeletedAt());
     }
 
     @Test
@@ -96,14 +104,18 @@ class CreateCategoryUseCaseTest {
         assertNotNull(actualOutput);
         assertNotNull(actualOutput.id());
 
-        verify(categoryGateway, times(1)).create(argThat(
-                aCategory -> Objects.equals(expectedName, aCategory.getName())
-                        && Objects.equals(expectedDescription, aCategory.getDescription())
-                        && Objects.equals(expectedIsActive, aCategory.isActive())
-                        && Objects.nonNull(aCategory.getId())
-                        && Objects.nonNull(aCategory.getCreatedAt())
-                        && Objects.nonNull(aCategory.getUpdatedAt())
-                        && Objects.nonNull(aCategory.getDeletedAt())));
+        verify(categoryGateway, times(1))
+                .create(categoryCaptor.capture());
+
+        final var aCategory = categoryCaptor.getValue();
+
+        assertEquals(expectedName, aCategory.getName());
+        assertEquals(expectedDescription, aCategory.getDescription());
+        assertEquals(expectedIsActive, aCategory.isActive());
+        assertNotNull(aCategory.getId());
+        assertNotNull(aCategory.getCreatedAt());
+        assertNotNull(aCategory.getUpdatedAt());
+        assertNotNull(aCategory.getDeletedAt());
     }
 
     @Test
@@ -125,13 +137,17 @@ class CreateCategoryUseCaseTest {
         assertEquals(expectedErrorCount, notification.getErrors().size());
         assertEquals(expectedErrorMessage, notification.firstError().message());
 
-        verify(categoryGateway, times(1)).create(argThat(
-                aCategory -> Objects.equals(expectedName, aCategory.getName())
-                        && Objects.equals(expectedDescription, aCategory.getDescription())
-                        && Objects.equals(expectedIsActive, aCategory.isActive())
-                        && Objects.nonNull(aCategory.getId())
-                        && Objects.nonNull(aCategory.getCreatedAt())
-                        && Objects.nonNull(aCategory.getUpdatedAt())
-                        && Objects.isNull(aCategory.getDeletedAt())));
+        verify(categoryGateway, times(1))
+                .create(categoryCaptor.capture());
+
+        final var aCategory = categoryCaptor.getValue();
+
+        assertEquals(expectedName, aCategory.getName());
+        assertEquals(expectedDescription, aCategory.getDescription());
+        assertEquals(expectedIsActive, aCategory.isActive());
+        assertNotNull(aCategory.getId());
+        assertNotNull(aCategory.getCreatedAt());
+        assertNotNull(aCategory.getUpdatedAt());
+        assertNull(aCategory.getDeletedAt());
     }
 }

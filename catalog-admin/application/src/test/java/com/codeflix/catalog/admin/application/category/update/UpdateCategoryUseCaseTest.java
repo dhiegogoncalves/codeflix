@@ -7,17 +7,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,13 +29,16 @@ import com.codeflix.catalog.admin.domain.category.CategoryID;
 import com.codeflix.catalog.admin.domain.exceptions.DomainException;
 
 @ExtendWith(MockitoExtension.class)
-public class UpdateCategoryUseCaseTest {
+class UpdateCategoryUseCaseTest {
 
     @InjectMocks
-    private DefaultUpdateCategoryUseCase defaultUpdateCategoryUseCase;
+    DefaultUpdateCategoryUseCase defaultUpdateCategoryUseCase;
 
     @Mock
-    private CategoryGateway categoryGateway;
+    CategoryGateway categoryGateway;
+
+    @Captor
+    ArgumentCaptor<Category> categoryCaptor;
 
     @BeforeEach
     void cleanUp() {
@@ -66,14 +69,17 @@ public class UpdateCategoryUseCaseTest {
 
         verify(categoryGateway, times(1)).findById(expectedId);
 
-        verify(categoryGateway, times(1)).update(argThat(
-                anUpdateCategory -> Objects.equals(expectedName, anUpdateCategory.getName())
-                        && Objects.equals(expectedDescription, anUpdateCategory.getDescription())
-                        && Objects.equals(expectedIsActive, anUpdateCategory.isActive())
-                        && Objects.equals(expectedId, anUpdateCategory.getId())
-                        && Objects.equals(aCategory.getCreatedAt(), anUpdateCategory.getCreatedAt())
-                        && aCategory.getUpdatedAt().isBefore(anUpdateCategory.getUpdatedAt())
-                        && Objects.isNull(aCategory.getDeletedAt())));
+        verify(categoryGateway, times(1))
+                .update(categoryCaptor.capture());
+
+        final var anUpdateCategory = categoryCaptor.getValue();
+
+        assertEquals(expectedName, anUpdateCategory.getName());
+        assertEquals(expectedDescription, anUpdateCategory.getDescription());
+        assertEquals(expectedIsActive, anUpdateCategory.isActive());
+        assertEquals(expectedId, anUpdateCategory.getId());
+        assertTrue(aCategory.getUpdatedAt().isBefore(anUpdateCategory.getUpdatedAt()));
+        assertNull(aCategory.getDeletedAt());
     }
 
     @Test
@@ -129,14 +135,17 @@ public class UpdateCategoryUseCaseTest {
 
         verify(categoryGateway, times(1)).findById(expectedId);
 
-        verify(categoryGateway, times(1)).update(argThat(
-                anUpdateCategory -> Objects.equals(expectedName, anUpdateCategory.getName())
-                        && Objects.equals(expectedDescription, anUpdateCategory.getDescription())
-                        && Objects.equals(expectedIsActive, anUpdateCategory.isActive())
-                        && Objects.equals(expectedId, anUpdateCategory.getId())
-                        && Objects.equals(aCategory.getCreatedAt(), anUpdateCategory.getCreatedAt())
-                        && aCategory.getUpdatedAt().isBefore(anUpdateCategory.getUpdatedAt())
-                        && Objects.nonNull(anUpdateCategory.getDeletedAt())));
+        verify(categoryGateway, times(1))
+                .update(categoryCaptor.capture());
+
+        final var anUpdateCategory = categoryCaptor.getValue();
+
+        assertEquals(expectedName, anUpdateCategory.getName());
+        assertEquals(expectedDescription, anUpdateCategory.getDescription());
+        assertEquals(expectedIsActive, anUpdateCategory.isActive());
+        assertEquals(expectedId, anUpdateCategory.getId());
+        assertTrue(aCategory.getUpdatedAt().isBefore(anUpdateCategory.getUpdatedAt()));
+        assertNotNull(anUpdateCategory.getDeletedAt());
     }
 
     @Test
@@ -163,14 +172,17 @@ public class UpdateCategoryUseCaseTest {
         assertEquals(expectedErrorCount, notification.getErrors().size());
         assertEquals(expectedErrorMessage, notification.firstError().message());
 
-        verify(categoryGateway, times(1)).update(argThat(
-                anUpdateCategory -> Objects.equals(expectedName, anUpdateCategory.getName())
-                        && Objects.equals(expectedDescription, anUpdateCategory.getDescription())
-                        && Objects.equals(expectedIsActive, anUpdateCategory.isActive())
-                        && Objects.equals(expectedId, anUpdateCategory.getId())
-                        && Objects.equals(aCategory.getCreatedAt(), anUpdateCategory.getCreatedAt())
-                        && aCategory.getUpdatedAt().isBefore(anUpdateCategory.getUpdatedAt())
-                        && Objects.isNull(anUpdateCategory.getDeletedAt())));
+        verify(categoryGateway, times(1))
+                .update(categoryCaptor.capture());
+
+        final var anUpdateCategory = categoryCaptor.getValue();
+
+        assertEquals(expectedName, anUpdateCategory.getName());
+        assertEquals(expectedDescription, anUpdateCategory.getDescription());
+        assertEquals(expectedIsActive, anUpdateCategory.isActive());
+        assertEquals(expectedId, anUpdateCategory.getId());
+        assertTrue(aCategory.getUpdatedAt().isBefore(anUpdateCategory.getUpdatedAt()));
+        assertNull(anUpdateCategory.getDeletedAt());
     }
 
     @Test
