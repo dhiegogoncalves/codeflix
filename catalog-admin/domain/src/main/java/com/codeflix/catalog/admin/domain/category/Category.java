@@ -1,9 +1,9 @@
 package com.codeflix.catalog.admin.domain.category;
 
-import java.time.Instant;
-
 import com.codeflix.catalog.admin.domain.AggregateRoot;
 import com.codeflix.catalog.admin.domain.validation.ValidationHandler;
+
+import java.time.Instant;
 
 public class Category extends AggregateRoot<CategoryID> {
 
@@ -15,9 +15,9 @@ public class Category extends AggregateRoot<CategoryID> {
     private Instant deletedAt;
 
     private Category(
-            final CategoryID anId, final String aName, final String aDescription,
-            final boolean isActive, final Instant aCreationDate, final Instant anUpdateDate,
-            final Instant aDeleteDate) {
+        final CategoryID anId, final String aName, final String aDescription,
+        final boolean isActive, final Instant aCreationDate, final Instant anUpdateDate,
+        final Instant aDeleteDate) {
 
         super(anId);
         this.name = aName;
@@ -29,7 +29,7 @@ public class Category extends AggregateRoot<CategoryID> {
     }
 
     public static Category newCategory(
-            final String aName, final String aDescription, final boolean isActive) {
+        final String aName, final String aDescription, final boolean isActive) {
 
         final var id = CategoryID.unique();
         final var now = Instant.now();
@@ -38,11 +38,17 @@ public class Category extends AggregateRoot<CategoryID> {
         return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
     }
 
+    public static Category with(
+        final CategoryID anId, final String name, final String description, final boolean active,
+        final Instant createdAt, final Instant updatedAt, final Instant deletedAt) {
+        return new Category(anId, name, description, active, createdAt, updatedAt, deletedAt);
+    }
+
     public static Category with(Category aCategory) {
-        return new Category(
-                aCategory.getId(), aCategory.getName(), aCategory.getDescription(),
-                aCategory.isActive(), aCategory.getCreatedAt(), aCategory.getUpdatedAt(),
-                aCategory.getDeletedAt());
+        return with(
+            aCategory.getId(), aCategory.getName(), aCategory.getDescription(),
+            aCategory.isActive(), aCategory.getCreatedAt(), aCategory.getUpdatedAt(),
+            aCategory.getDeletedAt());
     }
 
     @Override
