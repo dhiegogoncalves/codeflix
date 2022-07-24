@@ -9,6 +9,7 @@ import com.codeflix.catalog.admin.domain.category.CategoryGateway;
 import com.codeflix.catalog.admin.domain.category.CategoryID;
 import com.codeflix.catalog.admin.domain.category.CategorySearchQuery;
 import com.codeflix.catalog.admin.domain.pagination.Pagination;
+import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 
 @Service
@@ -21,9 +22,8 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Category create(Category aCategory) {
-        // TODO Auto-generated method stub
-        return null;
+    public Category create(final Category aCategory) {
+        return save(aCategory);
     }
 
     @Override
@@ -39,14 +39,17 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Category update(Category aCategory) {
-        // TODO Auto-generated method stub
-        return null;
+    public Category update(final Category aCategory) {
+        return save(aCategory);
     }
 
     @Override
     public Pagination<Category> findAll(CategorySearchQuery aQuery) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    private Category save(final Category aCategory) {
+        return this.categoryRepository.save(CategoryJpaEntity.from(aCategory)).toAggregate();
     }
 }
