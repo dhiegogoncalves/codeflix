@@ -1,7 +1,13 @@
 package com.codeflix.catalog.admin.infrastructure.category;
 
+import static com.codeflix.catalog.admin.infrastructure.utils.SpecificationUtils.like;
+
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.codeflix.catalog.admin.domain.category.Category;
@@ -11,6 +17,7 @@ import com.codeflix.catalog.admin.domain.category.CategorySearchQuery;
 import com.codeflix.catalog.admin.domain.pagination.Pagination;
 import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryRepository;
+import com.codeflix.catalog.admin.infrastructure.utils.SpecificationUtils;
 
 @Service
 public class CategoryMySQLGateway implements CategoryGateway {
@@ -47,8 +54,24 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     @Override
     public Pagination<Category> findAll(CategorySearchQuery aQuery) {
-        // TODO Auto-generated method stub
-        return null;
+        final var page = PageRequest.of(
+                aQuery.page(),
+                aQuery.perPage(),
+                Sort.by(Direction.fromString(aQuery.direction()), aQuery.sort()));
+
+        final var specifications = Optional.ofNullable(aQuery.terms())
+                .filter(str -> !str.isBlank())
+                .map(str -> SpecificationUtils.<CategoryJpaEntity>like("name", str)
+                        .or(like("description", str)))
+                .orElse(null);
+
+        final var pageResult = this.categoryRepository.findAll(Specification.where(specifications), page);
+
+        return new Pagination<>(
+                pageResult.getNumber(),
+                pageResult.getSize(),
+                pageResult.getTotalElements(),
+                pageResult.map(CategoryJpaEntity::toAggregate).toList());
     }
 
     private Category save(final Category aCategory) {
