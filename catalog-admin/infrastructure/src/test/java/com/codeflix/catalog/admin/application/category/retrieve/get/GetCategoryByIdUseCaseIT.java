@@ -19,7 +19,7 @@ import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryJp
 import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 
 @IntegrationTest
-public class GetCategoryByIdUseCaseIT {
+class GetCategoryByIdUseCaseIT {
 
     @Autowired
     private DefaultGetCategoryByIdUseCase defaultGetCategoryByIdUseCase;
@@ -91,5 +91,4 @@ public class GetCategoryByIdUseCaseIT {
                         .map(CategoryJpaEntity::from)
                         .toList());
     }
-
 }
