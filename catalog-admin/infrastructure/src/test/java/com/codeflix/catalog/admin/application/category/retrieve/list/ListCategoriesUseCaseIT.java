@@ -94,6 +94,7 @@ class ListCategoriesUseCaseIT {
         assertEquals(expectedItemsCount, expectedResult.items().size());
         assertEquals(expectedPage, expectedResult.currentPage());
         assertEquals(expectedPerPage, expectedResult.perPage());
+        assertEquals(expectedTotal, expectedResult.total());
         assertEquals(expectedCategoryName, expectedResult.items().get(0).name());
     }
 
@@ -122,6 +123,7 @@ class ListCategoriesUseCaseIT {
         assertEquals(expectedItemsCount, expectedResult.items().size());
         assertEquals(expectedPage, expectedResult.currentPage());
         assertEquals(expectedPerPage, expectedResult.perPage());
+        assertEquals(expectedTotal, expectedResult.total());
         assertEquals(expectedCategoryName, expectedResult.items().get(0).name());
     }
 
@@ -150,6 +152,7 @@ class ListCategoriesUseCaseIT {
         assertEquals(expectedItemsCount, expectedResult.items().size());
         assertEquals(expectedPage, expectedResult.currentPage());
         assertEquals(expectedPerPage, expectedResult.perPage());
+        assertEquals(expectedTotal, expectedResult.total());
 
         var index = 0;
         for (final var expectedName : expectedCategoriesName.split(";")) {
