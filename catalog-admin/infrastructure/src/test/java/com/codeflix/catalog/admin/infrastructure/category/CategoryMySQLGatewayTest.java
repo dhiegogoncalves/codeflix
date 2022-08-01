@@ -17,7 +17,7 @@ import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryJp
 import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 
 @MySQLGatewayTest
-class CategoryMySQLGatewayTest {
+public class CategoryMySQLGatewayTest {
 
     @Autowired
     private CategoryMySQLGateway categoryMySQLGateway;

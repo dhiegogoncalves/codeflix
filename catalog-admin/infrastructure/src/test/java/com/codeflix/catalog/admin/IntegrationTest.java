@@ -19,5 +19,4 @@ import com.codeflix.catalog.admin.infrastructure.configuration.WebServerConfig;
 @SpringBootTest(classes = WebServerConfig.class)
 @ExtendWith(CleanUpExtension.class)
 public @interface IntegrationTest {
-
 }
