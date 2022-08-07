@@ -3,6 +3,3 @@ mysql:
     password: 123456
     schema: video_catalog_admin
     url: localhost:3306
-
-server:
-    port: 8081
