@@ -25,6 +25,9 @@ import com.codeflix.catalog.admin.ControllerTest;
 import com.codeflix.catalog.admin.application.category.create.CreateCategoryCommand;
 import com.codeflix.catalog.admin.application.category.create.CreateCategoryOutput;
 import com.codeflix.catalog.admin.application.category.create.CreateCategoryUseCase;
+import com.codeflix.catalog.admin.domain.exceptions.DomainException;
+import com.codeflix.catalog.admin.domain.validation.handler.Notification;
+import com.codeflix.catalog.admin.domain.validation.Error;
 import com.codeflix.catalog.admin.infrastructure.api.CategoryAPI;
 import com.codeflix.catalog.admin.infrastructure.category.models.CreateCategoryApiInput;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,6 +71,75 @@ public class CategoryAPITest {
                 .andExpect(header().string("Location", "/categories/123"))
                 .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.id", Matchers.equalTo("123")));
+
+        verify(createCategoryUseCase).execute(categoryCaptor.capture());
+
+        final var createCategoryCommand = categoryCaptor.getValue();
+
+        assertEquals(expectedName, createCategoryCommand.name());
+        assertEquals(expectedDescription, createCategoryCommand.description());
+        assertEquals(expectedIsActive, createCategoryCommand.isActive());
+    }
+
+    @Test
+    void givenAnInvalidName_whenCallsCreateCategory_thenShouldReturnNotification() throws Exception {
+        final String expectedName = null;
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+        final var expectedMessage = "'name' should not be null";
+
+        final var anInput = new CreateCategoryApiInput(
+                expectedName, expectedDescription, expectedIsActive);
+
+        when(createCategoryUseCase.execute(any()))
+                .thenReturn(Either.left(
+                        Notification.create(new Error(expectedMessage))));
+
+        final var request = MockMvcRequestBuilders.post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(anInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(header().string("Location", Matchers.nullValue()))
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.errors", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].message", Matchers.equalTo(expectedMessage)));
+
+        verify(createCategoryUseCase).execute(categoryCaptor.capture());
+
+        final var createCategoryCommand = categoryCaptor.getValue();
+
+        assertEquals(expectedName, createCategoryCommand.name());
+        assertEquals(expectedDescription, createCategoryCommand.description());
+        assertEquals(expectedIsActive, createCategoryCommand.isActive());
+    }
+
+    @Test
+    void givenAnInvalidCommand_whenCallsCreateCategory_thenShouldReturnDomainException() throws Exception {
+        final String expectedName = null;
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
+        final var expectedMessage = "'name' should not be null";
+
+        final var anInput = new CreateCategoryApiInput(
+                expectedName, expectedDescription, expectedIsActive);
+
+        when(createCategoryUseCase.execute(any()))
+                .thenThrow(DomainException.with(new Error(expectedMessage)));
+
+        final var request = MockMvcRequestBuilders.post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(anInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(header().string("Location", Matchers.nullValue()))
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.errors", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].message", Matchers.equalTo(expectedMessage)));
 
         verify(createCategoryUseCase).execute(categoryCaptor.capture());
 
