@@ -3,10 +3,10 @@ package com.codeflix.catalog.admin.application.category.retrieve.get;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import com.codeflix.catalog.admin.domain.category.Category;
 import com.codeflix.catalog.admin.domain.category.CategoryGateway;
 import com.codeflix.catalog.admin.domain.category.CategoryID;
-import com.codeflix.catalog.admin.domain.exceptions.DomainException;
-import com.codeflix.catalog.admin.domain.validation.Error;
+import com.codeflix.catalog.admin.domain.exceptions.NotFoundException;
 
 public class DefaultGetCategoryByIdUseCase extends GetCategoryByIdUseCase {
 
@@ -25,9 +25,7 @@ public class DefaultGetCategoryByIdUseCase extends GetCategoryByIdUseCase {
                 .orElseThrow(notFound(aCategoryId));
     }
 
-    private Supplier<DomainException> notFound(final CategoryID anId) {
-        return () -> DomainException.with(
-                new Error("Category with ID %s was not found".formatted(anId.getValue())));
+    private Supplier<NotFoundException> notFound(final CategoryID anId) {
+        return () -> NotFoundException.with(Category.class, anId);
     }
-
 }

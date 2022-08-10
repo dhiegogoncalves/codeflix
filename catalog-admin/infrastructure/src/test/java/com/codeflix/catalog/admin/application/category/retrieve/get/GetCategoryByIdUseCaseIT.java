@@ -15,6 +15,7 @@ import com.codeflix.catalog.admin.IntegrationTest;
 import com.codeflix.catalog.admin.domain.category.Category;
 import com.codeflix.catalog.admin.domain.category.CategoryGateway;
 import com.codeflix.catalog.admin.domain.category.CategoryID;
+import com.codeflix.catalog.admin.domain.exceptions.NotFoundException;
 import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 
@@ -60,11 +61,8 @@ class GetCategoryByIdUseCaseIT {
         final var expectedId = CategoryID.from("123");
         final var expectedErrorMessage = "Category with ID 123 was not found";
 
-        doThrow(new IllegalStateException(expectedErrorMessage))
-                .when(categoryGateway).findById(expectedId);
-
         final var actualException = assertThrows(
-                IllegalStateException.class,
+                NotFoundException.class,
                 () -> defaultGetCategoryByIdUseCase.execute(expectedId.getValue()));
 
         assertEquals(expectedErrorMessage, actualException.getMessage());

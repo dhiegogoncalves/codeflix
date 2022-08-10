@@ -18,6 +18,7 @@ import com.codeflix.catalog.admin.domain.category.Category;
 import com.codeflix.catalog.admin.domain.category.CategoryGateway;
 import com.codeflix.catalog.admin.domain.category.CategoryID;
 import com.codeflix.catalog.admin.domain.exceptions.DomainException;
+import com.codeflix.catalog.admin.domain.exceptions.NotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class GetCategoryByIdUseCaseTest {
@@ -65,7 +66,7 @@ public class GetCategoryByIdUseCaseTest {
         when(categoryGateway.findById(expectedId)).thenReturn(Optional.empty());
 
         final var actualException = assertThrows(
-                DomainException.class,
+                NotFoundException.class,
                 () -> defaultGetCategoryByIdUseCase.execute(expectedId.getValue()));
 
         assertEquals(expectedErrorMessage, actualException.getMessage());
