@@ -27,6 +27,7 @@ import com.codeflix.catalog.admin.domain.category.Category;
 import com.codeflix.catalog.admin.domain.category.CategoryGateway;
 import com.codeflix.catalog.admin.domain.category.CategoryID;
 import com.codeflix.catalog.admin.domain.exceptions.DomainException;
+import com.codeflix.catalog.admin.domain.exceptions.NotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 class UpdateCategoryUseCaseTest {
@@ -191,7 +192,6 @@ class UpdateCategoryUseCaseTest {
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = false;
         final var expectedId = "123";
-        final var expectedErrorCount = 1;
         final var expectedErrorMessage = "Category with ID 123 was not found";
 
         final var aCommand = UpdateCategoryCommand.with(
@@ -201,11 +201,10 @@ class UpdateCategoryUseCaseTest {
                 .thenReturn(Optional.empty());
 
         final var actualException = assertThrows(
-                DomainException.class,
+                NotFoundException.class,
                 () -> defaultUpdateCategoryUseCase.execute(aCommand));
 
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        assertEquals(expectedErrorMessage, actualException.getMessage());
 
         verify(categoryGateway, times(1))
                 .findById(CategoryID.from(expectedId));

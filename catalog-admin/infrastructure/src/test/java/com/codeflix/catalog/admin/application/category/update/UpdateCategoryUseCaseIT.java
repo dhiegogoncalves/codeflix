@@ -21,6 +21,7 @@ import com.codeflix.catalog.admin.IntegrationTest;
 import com.codeflix.catalog.admin.domain.category.Category;
 import com.codeflix.catalog.admin.domain.category.CategoryGateway;
 import com.codeflix.catalog.admin.domain.exceptions.DomainException;
+import com.codeflix.catalog.admin.domain.exceptions.NotFoundException;
 import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryJpaEntity;
 import com.codeflix.catalog.admin.infrastructure.category.persistence.CategoryRepository;
 
@@ -179,11 +180,10 @@ class UpdateCategoryUseCaseIT {
                 expectedId, expectedName, expectedDescription, expectedIsActive);
 
         final var actualException = assertThrows(
-                DomainException.class,
+                NotFoundException.class,
                 () -> defaultUpdateCategoryUseCase.execute(aCommand));
 
-        assertEquals(expectedErrorCount, actualException.getErrors().size());
-        assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        assertEquals(expectedErrorMessage, actualException.getMessage());
     }
 
     private void save(final Category... aCategory) {

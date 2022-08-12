@@ -7,6 +7,7 @@ import com.codeflix.catalog.admin.domain.category.Category;
 import com.codeflix.catalog.admin.domain.category.CategoryGateway;
 import com.codeflix.catalog.admin.domain.category.CategoryID;
 import com.codeflix.catalog.admin.domain.exceptions.DomainException;
+import com.codeflix.catalog.admin.domain.exceptions.NotFoundException;
 import com.codeflix.catalog.admin.domain.validation.Error;
 import com.codeflix.catalog.admin.domain.validation.handler.Notification;
 
@@ -35,9 +36,8 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
         return notification.hasError() ? Either.left(notification) : update(aCategory);
     }
 
-    private Supplier<? extends DomainException> notFound(final CategoryID anId) {
-        return () -> DomainException.with(
-                new Error("Category with ID %s was not found".formatted(anId.getValue())));
+    private Supplier<? extends NotFoundException> notFound(final CategoryID anId) {
+        return () -> NotFoundException.with(Category.class, anId);
     }
 
     private Either<Notification, UpdateCategoryOutput> update(Category aCategory) {

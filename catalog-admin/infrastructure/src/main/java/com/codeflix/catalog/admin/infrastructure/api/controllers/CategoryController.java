@@ -11,11 +11,14 @@ import com.codeflix.catalog.admin.application.category.create.CreateCategoryComm
 import com.codeflix.catalog.admin.application.category.create.CreateCategoryOutput;
 import com.codeflix.catalog.admin.application.category.create.CreateCategoryUseCase;
 import com.codeflix.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCase;
+import com.codeflix.catalog.admin.application.category.update.UpdateCategoryCommand;
+import com.codeflix.catalog.admin.application.category.update.UpdateCategoryUseCase;
 import com.codeflix.catalog.admin.domain.pagination.Pagination;
 import com.codeflix.catalog.admin.domain.validation.handler.Notification;
 import com.codeflix.catalog.admin.infrastructure.api.CategoryAPI;
 import com.codeflix.catalog.admin.infrastructure.category.models.CategoryApiOutput;
 import com.codeflix.catalog.admin.infrastructure.category.models.CreateCategoryApiInput;
+import com.codeflix.catalog.admin.infrastructure.category.models.UpdateCategoryApiInput;
 import com.codeflix.catalog.admin.infrastructure.category.presenters.CategoryApiPresenter;
 
 @RestController
@@ -23,16 +26,19 @@ public class CategoryController implements CategoryAPI {
 
     private final CreateCategoryUseCase createCategoryUseCase;
     private final GetCategoryByIdUseCase getCategoryByIdUseCase;
+    private final UpdateCategoryUseCase updateCategoryUseCase;
 
     public CategoryController(
             final CreateCategoryUseCase createCategoryUseCase,
-            final GetCategoryByIdUseCase getCategoryByIdUseCase) {
+            final GetCategoryByIdUseCase getCategoryByIdUseCase,
+            final UpdateCategoryUseCase updateCategoryUseCase) {
         this.createCategoryUseCase = Objects.requireNonNull(createCategoryUseCase);
         this.getCategoryByIdUseCase = Objects.requireNonNull(getCategoryByIdUseCase);
+        this.updateCategoryUseCase = Objects.requireNonNull(updateCategoryUseCase);
     }
 
     @Override
-    public ResponseEntity<?> createCategory(CreateCategoryApiInput input) {
+    public ResponseEntity<?> createCategory(final CreateCategoryApiInput input) {
         final var aCommand = CreateCategoryCommand.with(
                 input.name(),
                 input.description(),
@@ -55,6 +61,19 @@ public class CategoryController implements CategoryAPI {
     @Override
     public CategoryApiOutput getById(String id) {
         return CategoryApiPresenter.present(this.getCategoryByIdUseCase.execute(id));
+    }
+
+    @Override
+    public ResponseEntity<?> updateById(final String id, final UpdateCategoryApiInput input) {
+        final var aCommand = UpdateCategoryCommand.with(
+                id,
+                input.name(),
+                input.description(),
+                input.isActive() != null ? input.isActive() : true);
+
+        return this.updateCategoryUseCase.execute(aCommand).fold(
+                ResponseEntity.unprocessableEntity()::body,
+                ResponseEntity::ok);
     }
 
 }
