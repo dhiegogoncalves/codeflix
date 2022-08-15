@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codeflix.catalog.admin.application.category.create.CreateCategoryCommand;
 import com.codeflix.catalog.admin.application.category.create.CreateCategoryOutput;
 import com.codeflix.catalog.admin.application.category.create.CreateCategoryUseCase;
+import com.codeflix.catalog.admin.application.category.delete.DeleteCategoryUseCase;
 import com.codeflix.catalog.admin.application.category.retrieve.get.GetCategoryByIdUseCase;
 import com.codeflix.catalog.admin.application.category.update.UpdateCategoryCommand;
 import com.codeflix.catalog.admin.application.category.update.UpdateCategoryUseCase;
@@ -27,14 +28,17 @@ public class CategoryController implements CategoryAPI {
     private final CreateCategoryUseCase createCategoryUseCase;
     private final GetCategoryByIdUseCase getCategoryByIdUseCase;
     private final UpdateCategoryUseCase updateCategoryUseCase;
+    private final DeleteCategoryUseCase deleteCategoryUseCase;
 
     public CategoryController(
             final CreateCategoryUseCase createCategoryUseCase,
             final GetCategoryByIdUseCase getCategoryByIdUseCase,
-            final UpdateCategoryUseCase updateCategoryUseCase) {
+            final UpdateCategoryUseCase updateCategoryUseCase,
+            final DeleteCategoryUseCase deleteCategoryUseCase) {
         this.createCategoryUseCase = Objects.requireNonNull(createCategoryUseCase);
         this.getCategoryByIdUseCase = Objects.requireNonNull(getCategoryByIdUseCase);
         this.updateCategoryUseCase = Objects.requireNonNull(updateCategoryUseCase);
+        this.deleteCategoryUseCase = Objects.requireNonNull(deleteCategoryUseCase);
     }
 
     @Override
@@ -74,6 +78,11 @@ public class CategoryController implements CategoryAPI {
         return this.updateCategoryUseCase.execute(aCommand).fold(
                 ResponseEntity.unprocessableEntity()::body,
                 ResponseEntity::ok);
+    }
+
+    @Override
+    public void deleteById(String anId) {
+        this.deleteCategoryUseCase.execute(anId);
     }
 
 }
