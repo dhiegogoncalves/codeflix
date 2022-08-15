@@ -53,7 +53,6 @@ import com.codeflix.catalog.admin.domain.exceptions.NotFoundException;
 import com.codeflix.catalog.admin.domain.pagination.Pagination;
 import com.codeflix.catalog.admin.domain.validation.handler.Notification;
 import com.codeflix.catalog.admin.domain.validation.Error;
-import com.codeflix.catalog.admin.infrastructure.api.CategoryAPI;
 import com.codeflix.catalog.admin.infrastructure.category.models.CreateCategoryRequest;
 import com.codeflix.catalog.admin.infrastructure.category.models.UpdateCategoryRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;

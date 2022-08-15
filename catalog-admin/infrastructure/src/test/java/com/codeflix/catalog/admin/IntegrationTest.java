@@ -17,6 +17,6 @@ import com.codeflix.catalog.admin.infrastructure.configuration.WebServerConfig;
 @Inherited
 @ActiveProfiles("test")
 @SpringBootTest(classes = WebServerConfig.class)
-@ExtendWith(CleanUpExtension.class)
+@ExtendWith(MySQLCleanUpExtension.class)
 public @interface IntegrationTest {
 }
