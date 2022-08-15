@@ -1,4 +1,4 @@
-package com.codeflix.catalog.admin.infrastructure.category.api;
+package com.codeflix.catalog.admin.infrastructure.api;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
