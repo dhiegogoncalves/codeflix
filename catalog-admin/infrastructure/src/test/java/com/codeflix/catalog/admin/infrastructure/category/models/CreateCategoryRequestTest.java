@@ -1,7 +1,6 @@
 package com.codeflix.catalog.admin.infrastructure.category.models;
 
 import java.io.IOException;
-import java.time.Instant;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

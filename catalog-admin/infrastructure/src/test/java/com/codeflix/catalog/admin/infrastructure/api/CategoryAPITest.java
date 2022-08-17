@@ -233,8 +233,7 @@ public class CategoryAPITest {
                 .thenThrow(NotFoundException.with(Category.class, expectedId));
 
         // when
-        final var request = get("/categories/{id}", expectedId.getValue())
-                .contentType(MediaType.APPLICATION_JSON);
+        final var request = get("/categories/{id}", expectedId.getValue());
 
         final var response = this.mvc.perform(request).andDo(print());
 
@@ -345,8 +344,7 @@ public class CategoryAPITest {
         doNothing().when(deleteCategoryUseCase).execute(any());
 
         // when
-        final var request = delete("/categories/{id}", expectedId)
-                .contentType(MediaType.APPLICATION_JSON);
+        final var request = delete("/categories/{id}", expectedId);
 
         final var response = this.mvc.perform(request).andDo(print());
 
