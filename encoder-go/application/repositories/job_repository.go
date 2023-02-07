@@ -21,7 +21,7 @@ func NewJobRepository(db *gorm.DB) *JobRepositoryDb {
 	return &JobRepositoryDb{Db: db}
 }
 
-func (r *JobRepositoryDb) Insert(job *domain.Job) (*domain.Job, error) {
+func (r JobRepositoryDb) Insert(job *domain.Job) (*domain.Job, error) {
 	err := r.Db.Create(job).Error
 	if err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func (r *JobRepositoryDb) Insert(job *domain.Job) (*domain.Job, error) {
 	return job, nil
 }
 
-func (r *JobRepositoryDb) Find(id string) (*domain.Job, error) {
+func (r JobRepositoryDb) Find(id string) (*domain.Job, error) {
 	var job domain.Job
 
 	r.Db.Preload("Video").First(&job, "id = ?", id)
@@ -41,7 +41,7 @@ func (r *JobRepositoryDb) Find(id string) (*domain.Job, error) {
 	return &job, nil
 }
 
-func (r *JobRepositoryDb) Update(job *domain.Job) (*domain.Job, error) {
+func (r JobRepositoryDb) Update(job *domain.Job) (*domain.Job, error) {
 	err := r.Db.Save(job).Error
 	if err != nil {
 		return nil, err
