@@ -133,3 +133,13 @@ func (s *VideoService) Finish() error {
 
 	return nil
 }
+
+func (s *VideoService) InsertVideo() error {
+	_, err := s.VideoRepository.Insert(s.Video)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
